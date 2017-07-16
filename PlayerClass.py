@@ -15,9 +15,3 @@ class Player:
         self.ros_pts = player_ros
 
         self.true_RP = False  # Flag to tell if an actual RP
-
-    def __init__(self, name, team, positions, status):
-
-        pass
-
-    def add_stats(self, g):

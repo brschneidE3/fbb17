@@ -43,7 +43,7 @@ class League:
                 new_row.append(val_by_pos[team.name][position])
             val_by_pos_table.append(new_row)
 
-        print tabulate(val_by_pos_table, headers)
+        print tabulate(val_by_pos_table, headers), '\n'
 
     def value_by_position_heatmap(self):
         val_by_pos = self.get_value_by_position()

@@ -68,7 +68,7 @@ class Team:
             for player in starting_players:
                 new_row.append(pyomo.value(solved_opt.playing[player, position]))
             playing_assignments.append(new_row)
-        print tabulate(playing_assignments, headers=headers)
+        print tabulate(playing_assignments, headers=headers), '\n'
 
     def print_lineup(self, solved_opt=None):
         solved_opt = self.solve_max_points() if solved_opt is None else solved_opt
@@ -83,6 +83,7 @@ class Team:
 
         for row in lineup:
             print row
+        print '\n'
 
     def value_by_position(self, solved_opt=None):
         solved_opt = self.solve_max_points() if solved_opt is None else solved_opt

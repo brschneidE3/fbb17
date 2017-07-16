@@ -10,4 +10,3 @@ def create_batters():
 def create_pitchers():
 
     return 0
-
