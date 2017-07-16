@@ -2,6 +2,12 @@ __author__ = 'brsch'
 
 import csv
 
+"""
+THIS SCRIPT IS USED TO READ IN THE REMAINDER OF SEASON PROJECTIONS FOR EACH PLAYER FROM FANGRAPHS, AND COMPILED THESE
+PLAYERS INTO A DICTIONARY CALLED ros, WHOSE KEYS ARE PLAYER NAMES AND MLB TEAMS, AND WHOSE VALUES ARE REMAINING POITNS
+IN THE SEASON
+"""
+
 
 def calc_batter_ros(sing, doub, trip, hr, r, rbi, bb, k, sb, cs):
     return 2*doub + 3*trip + hr*4 + r + rbi + bb - 0.5*k + 2*sb - cs + sing
@@ -11,6 +17,7 @@ def calc_pitcher_ros(w, l, ip, h, er, k, bb):
     return 5*w - 3*l + 2*ip - 0.5*h - 2*er + k - 0.5*bb
 
 ros = {}
+ppg = {}
 with open('Batters ROS.csv', 'rb') as batterfile:
     reader = csv.reader(batterfile)
     first_row = True
@@ -19,6 +26,7 @@ with open('Batters ROS.csv', 'rb') as batterfile:
         if first_row:
             name_i = row.index('Name')
             team_i = row.index('Team')
+            g_i = row.index('G')
             h_i = row.index('H')
             doub_i = row.index('2B')
             trip_i = row.index('3B')
@@ -33,6 +41,7 @@ with open('Batters ROS.csv', 'rb') as batterfile:
         else:
             name = row[name_i]
             team = row[team_i]
+            g = float(row[g_i])
             h = float(row[h_i])
             doub = float(row[doub_i])
             trip = float(row[trip_i])
@@ -51,8 +60,9 @@ with open('Batters ROS.csv', 'rb') as batterfile:
                 print 'Duplicate player: %s - %s' % (name, team)
             else:
                 ros[(name, team)] = player_ros
+                ppg[(name, team)] = player_ros/g
 
-pitchers_ros = {}
+true_rps = []
 with open('Pitchers ROS.csv', 'rb') as pitcherfile:
     reader = csv.reader(pitcherfile)
     first_row = True
@@ -63,6 +73,8 @@ with open('Pitchers ROS.csv', 'rb') as pitcherfile:
             team_i = row.index('Team')
             w_i = row.index('W')
             l_i = row.index('L')
+            g_i = row.index('G')
+            gs_i = row.index('GS')
             ip_i = row.index('IP')
             h_i = row.index('H')
             er_i = row.index('ER')
@@ -75,6 +87,8 @@ with open('Pitchers ROS.csv', 'rb') as pitcherfile:
             team = row[team_i]
             w = float(row[w_i])
             l = float(row[l_i])
+            g = float(row[g_i])
+            gs = float(row[gs_i])
             ip = float(row[ip_i])
             h = float(row[h_i])
             er = float(row[er_i])
@@ -86,3 +100,9 @@ with open('Pitchers ROS.csv', 'rb') as pitcherfile:
                 print 'Duplicate player: %s - %s' % (name, team)
             else:
                 ros[(name, team)] = player_ros
+                ppg[(name, team)] = player_ros/g
+
+            if gs == 0.0:
+                true_rps.append((name, team))
+
+print '%s players found on Fangraphs' % len(ros.keys())

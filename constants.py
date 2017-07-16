@@ -62,3 +62,36 @@ fx_to_fg_name_conversions = {
     'Rubby De La Rosa': ('Rubby', 'de la Rosa'),
     'Mark Leiter Jr.': ('Mark', 'Leiter')
     }
+
+starting_roster = {
+    'C': 2,
+    '1B': 1,
+    '2B': 1,
+    '3B': 1,
+    'SS': 1,
+    'CI': 1,
+    'MI': 1,
+    'OF': 5,
+    'UT': 2,
+
+    'SP': 3,
+    'RP': 2,
+    'P': 3
+}
+
+pos_scalar = {
+    'C': 1.00001,
+    '1B': 1.00001,
+    '2B': 1.00001,
+    '3B': 1.00001,
+    'SS': 1.00001,
+    'CI': 1,
+    'MI': 1,
+    'OF': 1.00001,
+    'UT': 1,
+
+    'SP': 1.00001,
+    'RP': 1.00001,
+    'P': 1
+}
+ordered_pos = ['C', '1B', '2B', '3B', 'SS', 'CI', 'MI', 'OF', 'UT', 'SP', 'RP', 'P']

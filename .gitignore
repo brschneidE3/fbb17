@@ -1,0 +1,5 @@
+.idea
+*.pyc
+Cases/Old/*
+Old/*
+Optimization Inputs - OLD/*

@@ -22,10 +22,20 @@ __author__ = 'brsch'
 # Trade calculator
 
 from read_fantrax import players, teams
+import LeagueClass
 
-for team in teams.values():
-    if team not in ['WW', 'FA']:
-        print team.name.upper(), len(team.players)
-        # for player in team.players:
-        #     print player.name
-        # print '\n'
+league = LeagueClass.League(teams=[team for team in teams.values() if team.name not in ['WW','FA']],
+                            freeagencies=[team for team in teams.values() if team.name in ['WW', 'FA']])
+# league.print_league_projections()
+league.print_value_by_position()
+# league.value_by_position_heatmap()
+
+fa_team = teams['FA']
+ww_team = teams['WW']
+
+for team in league.teams:
+    if team.name == 'MC':
+        players = team.players + fa_team.players + ww_team.players
+        solved_opt = team.solve_max_points(players)
+        team.print_lineup()
+        team.print_lineup(solved_opt)
