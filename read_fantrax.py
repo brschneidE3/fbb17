@@ -110,3 +110,4 @@ if len(ros.keys()) > 0:
 print '\n'
 
 print 'Projections for %s players compiled \n' % len(players)
+

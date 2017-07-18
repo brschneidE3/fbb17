@@ -21,21 +21,20 @@ __author__ = 'brsch'
 
 # Trade calculator
 
-from read_fantrax import players, teams
-import LeagueClass
+import read_projections
+import add_total_projections
+import add_fantrax
 
-league = LeagueClass.League(teams=[team for team in teams.values() if team.name not in ['WW','FA']],
-                            freeagencies=[team for team in teams.values() if team.name in ['WW', 'FA']])
-# league.print_league_projections()
-league.print_value_by_position()
-# league.value_by_position_heatmap()
+# Add projections
+batters = read_projections.read_batter_projections()
+pitchers = read_projections.read_pitcher_projections()
 
-fa_team = teams['FA']
-ww_team = teams['WW']
+# Add season totals, 1B's, season-to-date and calculate fantasy points and ppg
+add_total_projections.add_batter_total_projections(batters)
+add_total_projections.add_pitcher_total_projections(pitchers)
 
-for team in league.teams:
-    if team.name == 'MC':
-        players = team.players + fa_team.players + ww_team.players
-        solved_opt = team.solve_max_points(players)
-        team.print_lineup()
-        team.print_lineup(solved_opt)
+# Merge into players
+players = batters.copy()
+players.update(pitchers)
+
+add_fantrax.add_fantrax(players)
