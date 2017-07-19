@@ -3,7 +3,7 @@ import numpy
 
 class Player:
 
-    cumulative_attrs = ['G', 'H', 'HR', 'SO', 'BB', 'WAR', # Batters & pitchers
+    cumulative_attrs = ['G', 'H', 'HR', 'SO', 'BB', 'WAR',  # Batters & pitchers
                         'PA', 'AB', '1B', '2B', '3B', 'R', 'RBI', 'HBP', 'SB', 'CS',  # Just batters
                         'W', 'L', 'GS', 'IP', 'ER']  # Just pitchers
 
@@ -30,19 +30,34 @@ class Player:
         'H': -0.5,
         'ER': -2,
         'SO': 1,
-        'BB': -0.5
+        'BB': -0.5,
+        'HLD': 2,
+        'SV': 4
     }
 
     def __init__(self, playerid):
 
         self.playerid = playerid
 
-    def add_singles(self):
-        try:
-            self.proj_1B = self.proj_H - self.proj_2B - self.proj_3B - self.proj_HR
-            self.tot_1B = self.tot_H - self.tot_2B - self.tot_3B - self.tot_HR
-        except AttributeError:
-            pass
+    def add_singles(self, portion):
+
+        if self.is_batter:
+            h = getattr(self, '%s_H' % portion)
+            doubles = getattr(self, '%s_2B' % portion)
+            triples = getattr(self, '%s_3B' % portion)
+            hr = getattr(self, '%s_HR' % portion)
+
+            singles = h - doubles - triples - hr
+            setattr(self, '%s_1B' % portion, singles)
+
+    def is_true_rp(self):
+        if self.is_batter:
+            self.true_rp = False
+        else:
+            if self.proj_GS > 0:
+                self.true_rp = False
+            else:
+                self.true_rp = True
 
     def calc_seasontodate(self):
 
@@ -68,34 +83,37 @@ class Player:
         self.calc_std_k9()
         self.calc_std_bb9()
 
-    def calc_points(self):
-        for portion in ['tot', 'proj', 'std']:
-            points = 0
+    def calc_points(self, portion):
+        """
+        :param portion: 'std', 'proj' or 'tot' to depict what portion of the season is being calculated.
+        """
+        points = 0
 
-            if self.is_batter:
-                stat_weights = self.batter_scored_stats
-            else:
-                stat_weights = self.pitcher_scored_stats
+        if self.is_batter:
+            stat_weights = self.batter_scored_stats
+        else:
+            stat_weights = self.pitcher_scored_stats
 
-            for stat in stat_weights.keys():
-                weight = stat_weights[stat]
-                stat_name = '%s_%s' % (portion, stat)
+        for stat in stat_weights.keys():
+            weight = stat_weights[stat]
+            stat_name = '%s_%s' % (portion, stat)
 
-                try:
-                    quantity = getattr(self, stat_name)
-                    points += quantity*weight
+            try:
+                quantity = getattr(self, stat_name)
+                points += quantity*weight
 
-                except AttributeError:
-                    pass
+            except AttributeError:
+                print '%s not found for %s' % (stat_name, self.Name)
+                exit()
 
-            points_name = '%s_points' % portion
-            setattr(self, points_name, points)
+        points_name = '%s_points' % portion
+        setattr(self, points_name, points)
 
-            ppg_name = '%s_ppg' % portion
-            g_name = '%s_G' % portion
-            g = getattr(self, g_name)
-            ppg = points / g
-            setattr(self, ppg_name, ppg)
+        ppg_name = '%s_ppg' % portion
+        g_name = '%s_G' % portion
+        g = getattr(self, g_name)
+        ppg = points / g if g != 0 else numpy.nan
+        setattr(self, ppg_name, ppg)
 
     def calc_std_avg(self):
         try:

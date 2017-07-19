@@ -1,5 +1,7 @@
 
 import csv
+import constants
+
 
 def add_fantrax(players):
 
@@ -20,6 +22,9 @@ def add_fantrax(players):
         player.positions = positions
         player.status = status
 
+    print 'Fantrax data successfully injected.', '\n'
+
+
 def load_fantrax_data():
     fantrax_data = []
 
@@ -29,6 +34,7 @@ def load_fantrax_data():
             fantrax_data.append(row)
 
     return fantrax_data
+
 
 def find_fantrax_team(fangraphs_team):
     fg_to_fx = {
@@ -66,16 +72,65 @@ def find_fantrax_team(fangraphs_team):
 
     return fg_to_fx[fangraphs_team]
 
+
 def name_match(fx_name, fg_name):
     try:
         if fx_name in ['Rougned Odor (Minors)', 'Zimmerman, Jordan P,']:
             pass
-
+        elif fx_name == 'Torres, Jose M.' and fg_name == 'Jose Torres':
+            return True
+        elif fx_name == 'Taylor, Michael A.' and fg_name == 'Michael Taylor':
+            return True
         else:
+            # Parse into first and last
             last, first = fx_name.rsplit(', ')
+
+            # Change nickname
+            first = first.replace('Matthew', 'Matt')
+            fg_name = fg_name.replace('Matthew ', 'Matt ')
+            fg_name = fg_name.replace('Cameron ', 'Cam ')
+            first = first.replace('Cameron', 'Cam')
+            first = first.replace('Samuel', 'Sam')
+            fg_name = fg_name.replace('Samuel ', 'Sam ')
+            first = first.replace('Michael', 'Mike')
+            fg_name = fg_name.replace('Michael ', 'Mike ')
+            first = first.replace('Jakob', 'Jake')
+            fg_name = fg_name.replace('Jakob ', 'Jake ')
+            first = first.replace('Nicholas', 'Nick')
+            fg_name = fg_name.replace('Nicholas ', 'Nick ')
+            first = first.replace('Daniel', 'Dan')
+            fg_name = fg_name.replace('Daniel ', 'Dan ')
+            first = first.replace('Gregory', 'Greg')
+            fg_name = fg_name.replace('Gregory ', 'Greg ')
+            first = first.replace('Zack', 'Zach')
+            fg_name = fg_name.replace('Zack ', 'Zach ')
+            first = first.replace('Joseph', 'Joe')
+            fg_name = fg_name.replace('Joseph ', 'Joe ')
+            first = first.replace('Mitchell', 'Mitch')
+            fg_name = fg_name.replace('Mitchell ', 'Mitch ')
+
+            if first != 'Jacoby':
+                first = first.replace('Jacob', 'Jake')
+            fg_name = fg_name.replace('Jacob ', 'Jake ')
+
+            # Remove periods
             first = first.replace('.', '')
             last = last.replace('.', '')
             fg_name = fg_name.replace('.', '')
+
+            # Remove Jr's
+            last = last.replace(' Jr', '')
+            fg_name = fg_name.replace(' Jr', '')
+
+            # All lowercase
+            first = first.lower()
+            last = last.lower()
+            fg_name = fg_name.lower()
+
+            # Remove -'s
+            first = first.replace('-', '')
+            last = last.replace('-', '')
+            fg_name = fg_name.replace('-', '')
 
             if '%s %s' % (first, last) == fg_name:
                 return True
@@ -85,23 +140,21 @@ def name_match(fx_name, fg_name):
         print 'Error when comparing %s and %s' % (fx_name, fg_name)
         exit()
 
+
 def team_match(fx_team, fg_team):
     return fx_team == fg_team
 
-def match(fx_name, fx_team, fg_name, fg_team):
 
-    fg_to_fx = {
-        ('Adam Wilk', 'MIN'): ('Wilk, Adam', '(N/A)'),
-        ('Kiké Hernandez', 'LAD'): ('Hernandez, Kike', 'LAD')
-    }
+def match(fx_name, fx_team, fg_name, fg_team):
 
     if name_match(fx_name, fg_name) and team_match(fx_team, fg_team):
         return True
-    elif (fg_name, fg_team) in fg_to_fx.keys():
-        if (fx_name, fx_team) == fg_to_fx[(fg_name, fg_team)]:
+    elif (fg_name, fg_team) in constants.fg_to_fx.keys():
+        if (fx_name, fx_team) == constants.fg_to_fx[(fg_name, fg_team)]:
             return True
     else:
         return False
+
 
 def get_fantrax_row(fg_name, fg_team, name_i, team_i, fantrax_data):
 
@@ -116,4 +169,5 @@ def get_fantrax_row(fg_name, fg_team, name_i, team_i, fantrax_data):
             pass
 
     print '%s on %s not found in Fantrax data.' % (fg_name, fg_team)
+    print "('%s', '%s'): ('%s', '')," % (fg_name, fg_team, ', '.join(fg_name.rsplit(' ')[::-1]))
     exit()

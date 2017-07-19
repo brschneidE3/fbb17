@@ -1,22 +1,26 @@
 import csv
 
+
 def add_batter_total_projections(players):
 
-    with open('Batters TOT.csv', 'rb') as batter_total_projections_file:
+    with open('Batters DC ROS.csv', 'rb') as batter_total_projections_file:
         players = add_total_projections_file(players, batter_total_projections_file)
 
     return players
 
+
 def add_pitcher_total_projections(players):
 
-    with open('Pitchers TOT.csv', 'rb') as pitcher_total_projections_file:
+    with open('Pitchers DC ROS.csv', 'rb') as pitcher_total_projections_file:
         players = add_total_projections_file(players, pitcher_total_projections_file)
 
     return players
 
+
 def add_total_projections_file(players, total_projections_file):
     reader = csv.reader(total_projections_file)
     first_row = True
+    totals_missing = 0
 
     for row in reader:
         if first_row:
@@ -24,13 +28,13 @@ def add_total_projections_file(players, total_projections_file):
             first_row = False
 
         else:
-            playerid = float(row[headers.index('playerid')])
+            playerid = row[headers.index('playerid')]
 
             try:
                 player = players[playerid]
             except KeyError:
-                print 'playerid %s not found in total projections file.' % playerid
-                exit()
+                totals_missing += 1
+                pass
 
             for header in headers:
                 try:
@@ -42,8 +46,12 @@ def add_total_projections_file(players, total_projections_file):
                     attr_str = 'tot_%s' % header
                     setattr(player, attr_str, value)
 
-            player.add_singles()
+            player.add_singles('tot')
             player.calc_seasontodate()
-            player.calc_points()
+            player.calc_points('tot')
 
+    if player.is_batter:
+        print '%s batters missing remaining projections.' % totals_missing
+    else:
+        print '%s pitchers missing remaining projections.' % totals_missing
     return players
