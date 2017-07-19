@@ -11,5 +11,7 @@ league = get_league.load_league()
 
 # league.value_by_position_heatmap(normalize_by_position=False)
 
-league.print_mvp()
+# league.print_mvp()
 # league.teams['MC'].print_games_played()
+
+league.test_opt_size()

@@ -1,4 +1,6 @@
 import operator
+import time
+import matplotlib.pyplot as plt
 import constants
 from tabulate import tabulate
 import plotly.plotly as py
@@ -91,6 +93,25 @@ class League:
             lineups[team_name] = lineup
 
         return lineups
+
+    def test_opt_size(self):
+        team = self.teams.values()[0]
+
+        players = []
+        times = []
+
+        for fas_added in range(0, 100, 10):
+            num_players = len(team.players) + fas_added + 1
+            start = time.time()
+            opt_solution = team.get_max_points(team.players + self.freeagents[0:fas_added + 1])
+            finish = time.time()
+            elapsed = finish - start
+            print '%s seconds to solve for %s players' % (elapsed, num_players)
+            players.append(num_players)
+            times.append(elapsed)
+
+        plt.plot(players, times)
+        plt.show()
 
     def find_mvp(self):
         mvps = {}
