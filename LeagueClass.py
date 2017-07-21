@@ -94,16 +94,23 @@ class League:
 
         return lineups
 
-    def test_opt_size(self):
+    def find_player_by_name(self, name):
+        for player in self.players.values():
+            if player.Name == name:
+                return player
+
+    def test_opt_size(self, upto=500, by=1):
         team = self.teams.values()[0]
 
         players = []
         times = []
 
-        for fas_added in range(0, 100, 10):
+        for fas_added in range(0, upto, by):
             num_players = len(team.players) + fas_added + 1
+            next_player_added = self.freeagents[fas_added]
+            print 'adding player %s' % next_player_added.Name
             start = time.time()
-            opt_solution = team.get_max_points(team.players + self.freeagents[0:fas_added + 1])
+            opt_result = team.solve_max_points(team.players + self.freeagents[0:fas_added + 1])
             finish = time.time()
             elapsed = finish - start
             print '%s seconds to solve for %s players' % (elapsed, num_players)
@@ -113,11 +120,65 @@ class League:
         plt.plot(players, times)
         plt.show()
 
+    def find_optimal_lineup(self, team_name='MC', starting_opt=None):
+        team = self.teams[team_name]
+        best_opt = team.solve_max_points() if starting_opt is None else starting_opt
+        best_value = team.get_max_points(best_opt)
+        best_team = best_opt.players
+        freeagents_inspected = 0
+
+        for freeagent in self.freeagents:
+            if freeagent.proj_ppg < min(player.proj_ppg for player in team.players) and \
+                freeagent.proj_points < min(player.proj_points for player in team.players):
+                pass
+            else:
+                try:
+                    new_opt = team.solve_max_points(best_team + [freeagent])
+                    new_value = team.get_max_points(new_opt)
+
+                except ValueError:
+                    print freeagent.proj_ppg
+
+                if new_value > best_value:
+                    best_value = new_value
+                    best_opt = new_opt
+                    print '%s free agents inspected. Current best value: %s' % (freeagents_inspected, best_value)
+                    least_used_player = sorted(team.get_games_played(new_opt).items(), key=operator.itemgetter(1),
+                                                 reverse=True)[-1][0]
+                    best_team = [element for element in best_team if element != least_used_player]
+                else:
+                    best_team = [element for element in best_team if element != freeagent]
+
+            freeagents_inspected += 1
+
+        team.print_used_by_pos(best_opt, used_only=True)
+        return best_opt
+
+    def evaluate_trade(self, team_name, get_playerids, give_playerids):
+        team = self.teams[team_name]
+        without_trade_opt = self.find_optimal_lineup(team_name)
+        without_trade_value = team.get_max_points(without_trade_opt)
+
+        get_players = [self.players[playerid] for playerid in get_playerids]
+        give_players = [self.players[playerid] for playerid in give_playerids]
+        with_trade_players = [player for player in team.players if player not in give_players] + get_players
+        starting_with_trade_opt = team.solve_max_points(with_trade_players)
+        with_trade_opt = self.find_optimal_lineup(starting_opt=starting_with_trade_opt)
+        with_trade_value = team.get_max_points(solved_opt=with_trade_opt)
+
+        trade_value = with_trade_value - without_trade_value
+        print 'Proposed trade:'
+        print [player.Name for player in give_players]
+        print 'for'
+        print [player.Name for player in get_players]
+        print ' is worth %s points' % int(trade_value)
+
     def find_mvp(self):
         mvps = {}
 
         for team in self.teams.values():
-            points = team.get_max_points(team.players + self.freeagents)
+            opt_solution = team.solve_max_points(team.players + self.freeagents)
+            points = team.get_max_points(opt_solution)
             print 'Optimizing for %s' % team.name
 
             total_players = len(team.players)
@@ -126,7 +187,8 @@ class League:
             for i in range(total_players):
                 player = team.players[i]
                 players_minus_one = team.players[:i] + team.players[i+1:] + self.freeagents
-                points_minus_one = team.get_max_points(players_minus_one)
+                solution_minus_one = team.solve_max_points(players_minus_one)
+                points_minus_one = team.get_max_points(solution_minus_one)
                 value = points - points_minus_one
                 mvps[(team.name, player.Name)] = value
 

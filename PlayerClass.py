@@ -39,6 +39,18 @@ class Player:
 
         self.playerid = playerid
 
+    def __repr__(self):
+
+        return self.Name
+
+    def is_replaceable(self):
+        if not self.is_batter:
+            self.replaceable = True
+        # elif 'y' in self.Name:
+        #     self.replaceable = True
+        else:
+            self.replaceable = False
+
     def add_singles(self, portion):
 
         if self.is_batter:
@@ -112,7 +124,7 @@ class Player:
         ppg_name = '%s_ppg' % portion
         g_name = '%s_G' % portion
         g = getattr(self, g_name)
-        ppg = points / g if g != 0 else numpy.nan
+        ppg = points / g if g != 0 else 0.0
         setattr(self, ppg_name, ppg)
 
     def calc_std_avg(self):

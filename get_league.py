@@ -11,6 +11,8 @@ def update_league(players):
     free_agents = []
 
     for player in players.values():
+        player.is_replaceable()
+
         team_name = player.status
 
         if team_name in ['WW', 'FA']:
