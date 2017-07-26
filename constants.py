@@ -118,7 +118,7 @@ ordered_pos = ['C_1','C_2','1B_1','2B_1','3B_1','SS_1','CI_1','MI_1','OF_1','OF_
                'UT_1','UT_2',
                'SP_1','SP_2','SP_3','RP_1', 'RP_2','P_1','P_2','P_3']
 
-games_remaining = 81
+games_remaining = 20
 games_per_pos = {
     'C_1': int(.66*games_remaining),
     'C_2': int(.66 * games_remaining),
@@ -148,13 +148,31 @@ games_per_pos = {
 nonfantrax_playerids = ['4182', '650', '3441', 'sa657984', 'sa3001224']
 
 fg_to_fx = {
-('J.D. Martinez', 'DET'): ('Martinez, J.D.', 'ARI'),
-('Tyler Clippard', 'NYY'): ('Clippard, Tyler', 'CHW'),
-('Chaz Roe', 'ATL'): ('Roe, Chaz', 'TB'),
-('Todd Frazier', 'CHW'): ('Frazier, Todd', 'NYY'),
-('Pablo Sandoval', 'BOS'): ('Sandoval, Pablo', '(N/A)'),
+    ('Travis Wood', 'KC'): ('Wood, Travis', 'SD'),
+    ('Rob Refsnyder', 'NYY'): ('Refsnyder, Rob', 'TOR'),
+    ('Anthony Recker', 'ATL'): ('Recker, Anthony', 'MIN'),
+    ('Jaime Garcia', 'ATL'): ('Garcia, Jaime', 'MIN'),
+    ('Jean Machi', 'SEA'): ('Machi, Jean', 'CHW'),
+    ('Jumbo Diaz', 'TB'): ('Diaz, Jumbo', '(N/A)'),
+    ('Ryan Buchter', 'SD'): ('Buchter, Ryan', 'KC'),
+    ('Matt Strahm', 'KC'): ('Strahm, Matt', 'SD'),
+    ('Marco Gonzales', 'STL'): ('Gonzales, Marco', 'SEA'),
+    ("Eric O'Flaherty", 'ATL'): ("O'Flaherty, Eric", "(N/A)"),
+    ('Brandon Maurer', 'SD'): ('Maurer, Brandon', 'KC'),
+    ('Trevor Cahill', 'SD'): ('Cahill, Trevor', 'KC'),
+    ('Sergio Romo', 'LAD'): ('Romo, Sergio', 'TB'),
+    ('Danny Farquhar', 'TB'): ('Farquhar, Danny', 'CHW'),
+    ('Nick Tepesch', 'MIN'): ('Tepesch, Nick', 'TOR'),
+    ('Justin Haley', 'MIN'): ('Haley, Justin', '(N/A)'),
+    ('Neil Ramirez', 'NYM'): ('Ramirez, Neil', '(N/A)'),
+    ('Rickie Weeks Jr.', 'TB'): ('Weeks Jr., Rickie', '(N/A)'),
+    ('Tyrell Jenkins', 'SD'): ('Jenkins, Tyrell', '(N/A)'),
+    ('J.D. Martinez', 'DET'): ('Martinez, J.D.', 'ARI'),
+    ('Tyler Clippard', 'NYY'): ('Clippard, Tyler', 'CHW'),
+    ('Chaz Roe', 'ATL'): ('Roe, Chaz', 'TB'),
+    ('Todd Frazier', 'CHW'): ('Frazier, Todd', 'NYY'),
+    ('Pablo Sandoval', 'BOS'): ('Sandoval, Pablo', '(N/A)'),
     ('David Phelps', 'MIA'): ('Phelps, David', 'SEA'),
-    ('Danny Farquhar', 'TB'): ('Farquhar, Danny', '(N/A)'),
     ('David Robertson', 'CHW'): ('Robertson, David', 'NYY'),
     ('Tommy Kahnle', 'CHW'): ('Kahnle, Tommy', 'NYY'),
     ('Fernando Romero', '(N/A)'): ('Romero, Fernando', 'MIN'),

@@ -4,6 +4,8 @@ from coopr import pyomo
 from tabulate import tabulate
 import constants
 import operator
+import numpy
+
 
 class Team:
 
@@ -13,27 +15,34 @@ class Team:
         self.players = []
 
     def add_player(self, player):
-
         self.players.append(player)
 
     def solve_max_points(self, players=None):
         model = self.maximize_points(players)
         opt = pyomo.SolverFactory('cbc')
-        results = opt.solve(model)
+        opt.solve(model)
         return model
-
-    def print_proj_by_position(self, pos='P'):
-        players_points = []
-        for player in self.players:
-            if pos in player.positions:
-                players_points.append((player.Name, player.proj_points))
-        sorted_pp = sorted(players_points, key=operator.itemgetter(1), reverse=True)
-        for name, points in sorted_pp:
-            print '%s - %s' % (name, points)
 
     def get_max_points(self, solved_opt=None):
         solved_opt = self.solve_max_points() if solved_opt is None else solved_opt
         return pyomo.value(solved_opt.objective)
+
+    def print_points_by_position(self, pos='P', portion='proj'):
+        players_points = []
+
+        for player in self.players:
+            if pos in player.positions:
+                try:
+                    points = getattr(player, '%s_points' % portion)
+                except AttributeError:
+                    points = numpy.nan
+                players_points.append((player.Name, points))
+
+        sorted_pp = sorted(players_points, key=operator.itemgetter(1), reverse=True)
+        print '%s - %s' % ("Player", pos)
+        for name, points in sorted_pp:
+            print '%s - %s' % (name, points)
+        print '\n'
 
     def print_games_played(self, solved_opt=None):
         solved_opt = self.solve_max_points() if solved_opt is None else solved_opt

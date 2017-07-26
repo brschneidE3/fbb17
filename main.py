@@ -3,6 +3,7 @@ __author__ = 'brsch'
 import get_players
 import get_league
 import operator
+import constants
 
 # players = get_players.update_players()
 players, batters, pitchers = get_players.load_players()
@@ -12,7 +13,10 @@ league = get_league.load_league()
 # league.print_league_projections()
 # league.find_optimal_lineup()
 # league.value_by_position_heatmap(normalize_by_position=False)
-league.evaluate_trade('MC', give_playerids=['5401', '10816', '4810'], get_playerids=['9166', '4153'])
+league.evaluate_trade('MC', give_playerids=['5401', '12808', '9112', '4810'], get_playerids=['4153', '6893', '9166'])
+
+# for position in list(set([element.rsplit('_')[0] for element in constants.ordered_pos])):
+#     league.teams['WHIT'].print_points_by_position(position, 'proj')
 # league.teams['MC'].print_proj_by_position('P')
 
 # league.print_mvp()
