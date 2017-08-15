@@ -110,6 +110,12 @@ def name_match(fx_name, fg_name):
             fg_name = fg_name.replace('Mitchell ', 'Mitch ')
             first = first.replace('Chasen', 'Chase')
             fg_name = fg_name.replace('Chasen ', 'Chase ')
+            first = first.replace('Lucas', 'Luke')
+            fg_name = fg_name.replace('Lucas ', 'Luke ')
+            first = first.replace('Christopher', 'Chris')
+            fg_name = fg_name.replace('Christopher ', 'Chris ')
+            first = first.replace('Nicky', 'Nick')
+            fg_name = fg_name.replace('Nicky ', 'Nick ')
 
             if first != 'Jacoby':
                 first = first.replace('Jacob', 'Jake')

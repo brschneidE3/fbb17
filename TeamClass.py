@@ -10,7 +10,6 @@ import numpy
 class Team:
 
     def __init__(self, name):
-
         self.name = name
         self.players = []
 
@@ -18,6 +17,7 @@ class Team:
         self.players.append(player)
 
     def solve_max_points(self, players=None):
+        players = self.players if players is None else players
         model = self.maximize_points(players)
         opt = pyomo.SolverFactory('cbc')
         opt.solve(model)

@@ -7,7 +7,7 @@ import constants
 def read_batter_projections(players=None):
     players = {} if players is None else players
 
-    with open('Batters DC.csv', 'rb') as batter_projections_file:
+    with open('Batters DC ROS.csv', 'rb') as batter_projections_file:
         players = read_projections_file(players, batter_projections_file, is_batter=True)
 
     print 'Depth Charts batter projections successfully loaded.', '\n'
@@ -18,7 +18,7 @@ def read_batter_projections(players=None):
 def read_pitcher_projections(players=None):
     players = {} if players is None else players
 
-    with open('Pitchers DC.csv', 'rb') as pitcher_projections_file:
+    with open('Pitchers DC ROS.csv', 'rb') as pitcher_projections_file:
         players = read_projections_file(players, pitcher_projections_file, is_batter=False)
 
     print 'Depth Charts pitcher projections successfully loaded.', '\n'

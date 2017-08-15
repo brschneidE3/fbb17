@@ -46,10 +46,8 @@ class Player:
     def is_replaceable(self):
         if not self.is_batter:
             self.replaceable = True
-        # elif 'y' in self.Name:
-        #     self.replaceable = True
         else:
-            self.replaceable = False
+            self.replaceable = True
 
     def add_singles(self, portion):
 

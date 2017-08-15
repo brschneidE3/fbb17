@@ -44,6 +44,16 @@ class League:
 
         return val_by_pos
 
+    def print_FA_values(self, pos):
+        pos_players = {}
+        for player in self.players.values():
+            if pos in player.positions and player.status == 'FA':
+                pos_players[player.Name] = player.proj_points
+        sorted_players = sorted(pos_players.items(), key=operator.itemgetter(1), reverse=True)
+        for name, points in sorted_players:
+            print name, points
+
+
     def print_value_by_position(self):
         val_by_pos = self.get_value_by_position()
 
@@ -143,6 +153,7 @@ class League:
                     best_value = new_value
                     best_opt = new_opt
                     print '%s free agents inspected. Current best value: %s' % (freeagents_inspected, best_value)
+
                     least_used_player = sorted(team.get_games_played(new_opt).items(), key=operator.itemgetter(1),
                                                  reverse=True)[-1][0]
                     best_team = [element for element in best_team if element != least_used_player]
@@ -150,6 +161,7 @@ class League:
                     best_team = [element for element in best_team if element != freeagent]
 
             freeagents_inspected += 1
+
 
         team.print_used_by_pos(best_opt, used_only=True)
         return best_opt
